@@ -1,381 +1,241 @@
-# 🏢 AWS Secure Company Network Architecture
+# 📸 Project Screenshots
 
-A real-world AWS networking project demonstrating secure communication between Company, HR, and Employee servers using Amazon VPC, Public and Private Subnets, Route Tables, NAT Gateway, Security Groups, and EC2 Instances.
-
----
-
-# 📌 Project Overview
-
-This project simulates a secure company infrastructure where:
-
-- The **Company Server** is deployed inside a **Public Subnet**.
-- The **HR Server** is deployed inside **Private Subnet 1**.
-- The **Employee Server** is deployed inside **Private Subnet 2**.
-- Only the Company Server is publicly accessible through SSH.
-- HR and Employee servers remain private and can only be accessed through the Company Server.
-- Python HTTP servers are hosted on both private instances.
-- Internal communication between servers is verified using Private IP addresses.
+This folder contains screenshots demonstrating the complete implementation and testing of the **AWS Secure Company Network Architecture** project.
 
 ---
 
-# 🏗 Architecture
+# 1️⃣ VPC Configuration
 
-![Architecture](architecture/aws-company-network-architecture.png)
+This screenshot shows the custom VPC created for the project.
 
----
+- VPC CIDR: **10.0.0.0/16**
+- DNS Resolution Enabled
+- Custom Networking Environment
 
-# 🛠 AWS Services Used
-
-- Amazon VPC
-- Amazon EC2
-- Public Subnet
-- Private Subnet
-- Internet Gateway
-- NAT Gateway
-- Route Tables
-- Security Groups
-- SSH
-- Python HTTP Server
+![VPC](02-VPC.png)
 
 ---
 
-# 🌐 Network Design
+# 2️⃣ Private Route Table
 
-## VPC
+The private route table is associated with the HR and Employee private subnets.
 
-| Property | Value |
-|----------|--------|
-| CIDR Block | 10.0.0.0/16 |
+Routes:
 
----
+- 10.0.0.0/16 → Local
+- 0.0.0.0/0 → NAT Gateway
 
-## Public Subnet
-
-| Property | Value |
-|----------|--------|
-| CIDR | 10.0.1.0/24 |
-
-Contains:
-
-- Company Server
+![Private Route Table](03-PrivateRouteTable.png)
 
 ---
 
-## Private Subnet 1
+# 3️⃣ Public Route Table
 
-| Property | Value |
-|----------|--------|
-| CIDR | 10.0.2.0/24 |
+The public route table is associated with the Company public subnet.
 
-Contains:
+Routes:
 
-- HR Server
+- 10.0.0.0/16 → Local
+- 0.0.0.0/0 → Internet Gateway
 
----
-
-## Private Subnet 2
-
-| Property | Value |
-|----------|--------|
-| CIDR | 10.0.3.0/24 |
-
-Contains:
-
-- Employee Server
+![Public Route Table](04-PublicRouteTable.png)
 
 ---
 
-# 🖥 EC2 Instances
+# 4️⃣ Company Security Group
 
-| Instance | Type | Private IP | Public IP |
-|-----------|------|------------|-----------|
-| Company Server | t3.micro | 10.0.1.81 | Yes |
-| HR Server | t3.micro | 10.0.2.188 | No |
-| Employee Server | t3.micro | 10.0.3.99 | No |
+Security Group attached to the Company Server.
 
----
-
-# 🌍 Internet Access
-
-## Company Server
-
-- Internet Gateway
-- Public IP
-- SSH Access
-
-## HR Server
-
-- Private IP only
-- Internet via NAT Gateway
-
-## Employee Server
-
-- Private IP only
-- Internet via NAT Gateway
-
----
-
-# 🔒 Security Groups
-
-## Company Security Group
-
-Inbound Rules
+Inbound Rules:
 
 - SSH (22)
+- Custom TCP 8000 (only when required)
 
-Outbound Rules
+Purpose:
 
-- Allow All
+- SSH access from laptop
+- Communication with private servers
+
+![Company Security Group](05-Company-SecurityGrups.png)
 
 ---
 
-## HR Security Group
+# 5️⃣ HR Security Group
 
-Inbound Rules
+Security Group attached to the HR Server.
+
+Inbound Rules:
 
 - SSH (22)
-- Custom TCP (8000)
+- Custom TCP 8000
 
-Outbound Rules
+Purpose:
 
-- Allow All
+- Receive requests only from Company Server.
+
+![HR Security Group](06-HR-securityGroups.png)
 
 ---
 
-## Employee Security Group
+# 6️⃣ Employee Security Group
 
-Inbound Rules
+Security Group attached to the Employee Server.
+
+Inbound Rules:
 
 - SSH (22)
-- Custom TCP (8000)
+- Custom TCP 8000
 
-Outbound Rules
+Purpose:
 
-- Allow All
+- Receive requests only from Company Server.
 
----
-
-# 🛣 Route Tables
-
-## Public Route Table
-
-| Destination | Target |
-|-------------|--------|
-| 10.0.0.0/16 | Local |
-| 0.0.0.0/0 | Internet Gateway |
-
-Associated with:
-
-- Public Subnet
+![Employee Security Group](07-Employee-SecurityGroups.png)
 
 ---
 
-## Private Route Table
+# 7️⃣ EC2 Instances
 
-| Destination | Target |
-|-------------|--------|
-| 10.0.0.0/16 | Local |
-| 0.0.0.0/0 | NAT Gateway |
+Three EC2 instances were launched.
 
-Associated with
+| Server | Public IP | Private IP |
+|---------|-----------|------------|
+| Company Server | Yes | 10.0.1.81 |
+| HR Server | No | 10.0.2.188 |
+| Employee Server | No | 10.0.3.99 |
 
-- Private Subnet 1
-- Private Subnet 2
-
----
-
-# 🔐 SSH Connectivity
-
-Laptop
-
-↓
-
-Company Server (Public IP)
-
-↓
-
-HR Server (Private IP)
-
-↓
-
-Employee Server (Private IP)
-
-This configuration ensures that private instances are never directly exposed to the Internet.
+![EC2 Instances](08-EC2.png)
 
 ---
 
-# 🌐 Python HTTP Server
+# 8️⃣ SSH Connection to Company Server
 
-Python HTTP Server was started on both private instances.
+Successfully connected to the Company Server using its Public IP.
 
-Command
+```bash
+ssh -i aws_login.pem ubuntu@<Company-Public-IP>
+```
+
+![SSH Company](09-ssh-Company.png)
+
+---
+
+# 9️⃣ SSH Connection to Employee Server
+
+Successfully connected to the Employee Server using the Company Server as a Bastion Host.
+
+```bash
+ssh -i aws_login.pem ubuntu@10.0.3.99
+```
+
+![SSH Employee](10-ssh-Employee.png)
+
+---
+
+# 🔟 Python HTTP Server Running on HR Server
+
+Started a simple Python web server on the HR Server.
 
 ```bash
 python3 -m http.server 8000
 ```
 
+![Python Server HR](11-PythonServer-HR.png)
+
 ---
 
-# ✅ Testing Internal Communication
+# 1️⃣1️⃣ Company Server Accessing HR Server
 
-## Company → HR
-
-Command
+Verified communication between Company Server and HR Server using curl.
 
 ```bash
 curl http://10.0.2.188:8000
 ```
 
-Output
+Output:
 
 ```
 This is HR Server
 ```
 
+![curl HR](12-curl-HR.png)
+
 ---
 
-## Company → Employee
+# 1️⃣2️⃣ Python HTTP Server Running on Employee Server
 
-Command
+Started a Python web server on the Employee Server.
+
+```bash
+python3 -m http.server 8000
+```
+
+![Python Server Employee](13-PythonServer-Employee.png)
+
+---
+
+# 1️⃣3️⃣ Company Server Accessing Employee Server
+
+Verified communication between Company Server and Employee Server.
 
 ```bash
 curl http://10.0.3.99:8000
 ```
 
-Output
+Output:
 
 ```
 This is EMPLOYEE Server
 ```
 
----
-
-# 📷 Project Screenshots
-
-## VPC
-
-![](screenshots/01-VPC.png)
+![curl Employee](14-curl-Employee.png)
 
 ---
 
-## Public Route Table
+# 1️⃣4️⃣ SSH Connection to HR Server
 
-![](screenshots/02-Public-Route-Table.png)
+Successfully connected to the HR Server from the Company Server using the private IP.
 
----
+```bash
+ssh -i aws_login.pem ubuntu@10.0.2.188
+```
 
-## Private Route Table
-
-![](screenshots/03-Private-Route-Table.png)
-
----
-
-## Company Security Group
-
-![](screenshots/04-Company-Security-Group.png)
+![SSH HR](15-ssh-HR.png)
 
 ---
 
-## HR Security Group
+# ✅ Project Verification
 
-![](screenshots/05-HR-Security-Group.png)
+The screenshots verify that:
 
----
-
-## Employee Security Group
-
-![](screenshots/06-Employee-Security-Group.png)
-
----
-
-## EC2 Instances
-
-![](screenshots/07-EC2-Instances.png)
-
----
-
-## SSH into Company Server
-
-![](screenshots/08-SSH-Company-Server.png)
-
----
-
-## SSH into HR Server
-
-![](screenshots/09-SSH-HR-Server.png)
+- ✅ Custom VPC created
+- ✅ Public Subnet configured
+- ✅ Two Private Subnets configured
+- ✅ Internet Gateway attached
+- ✅ NAT Gateway configured
+- ✅ Public Route Table configured
+- ✅ Private Route Table configured
+- ✅ Company Security Group configured
+- ✅ HR Security Group configured
+- ✅ Employee Security Group configured
+- ✅ Three EC2 Instances launched
+- ✅ SSH connectivity established
+- ✅ Python HTTP Server running successfully
+- ✅ Company Server communicates with HR Server
+- ✅ Company Server communicates with Employee Server
+- ✅ Private networking successfully implemented
 
 ---
 
-## SSH into Employee Server
+# 🎯 Project Outcome
 
-![](screenshots/10-SSH-Employee-Server.png)
+This project demonstrates a secure AWS networking architecture where:
 
----
+- The Company Server is publicly accessible.
+- HR and Employee Servers remain private.
+- Internal communication is performed securely using private IP addresses.
+- Security Groups restrict unnecessary access.
+- Route Tables control traffic flow.
+- Python HTTP Server is used to verify successful communication between instances.
 
-## Python HTTP Server on HR
-
-![](screenshots/11-HR-Python-HTTP-Server.png)
-
----
-
-## Python HTTP Server on Employee
-
-![](screenshots/12-Employee-Python-HTTP-Server.png)
-
----
-
-## Company Server → HR Server Communication
-
-![](screenshots/13-Company-to-HR-Communication.png)
-
----
-
-## Company Server → Employee Server Communication
-
-![](screenshots/14-Company-to-Employee-Communication.png)
-
----
-
-# 📚 Key Learning Outcomes
-
-Through this project I learned:
-
-- Designing a custom Amazon VPC
-- Creating Public and Private Subnets
-- Configuring Internet Gateway and NAT Gateway
-- Creating Public and Private Route Tables
-- Launching EC2 instances in different subnets
-- Configuring Security Groups
-- Using SSH to securely access private servers
-- Hosting web applications using Python HTTP Server
-- Testing secure internal communication using Private IP addresses
-- Understanding secure network architecture on AWS
-
----
-
-# 🚀 Future Improvements
-
-- Application Load Balancer (ALB)
-- Auto Scaling Group (ASG)
-- HTTPS using ACM
-- Route 53 Domain
-- CloudWatch Monitoring
-- Nginx Reverse Proxy
-- CI/CD Pipeline using GitHub Actions
-- Infrastructure as Code using AWS CloudFormation or Terraform
-
----
-
-# 👩‍💻 Author
-
-**Anjali Gawali**
-
-Computer Engineering Student
-
-AWS | Linux | Networking | Cloud Computing
-
-GitHub: https://github.com/anjaligawali37
-
-LinkedIn: *(Add your LinkedIn profile URL here)*
-
----
+This architecture closely resembles how real organizations securely deploy workloads on AWS.
