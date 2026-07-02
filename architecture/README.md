@@ -40,8 +40,20 @@ The Company Server acts as the secure entry point to access the private servers.
 
 The HR and Employee servers are deployed inside private subnets and are **not directly accessible from the Internet**.
 
-## Diagram
+# 🏗️ AWS Network Architecture
 
-The architecture diagram is available in this folder:
+This diagram illustrates the complete AWS networking architecture used in this project.
 
-- `architecture-diagram.png`
+![Architecture](01-Architecture.png)
+
+## Components
+
+- Amazon VPC (10.0.0.0/16)
+- Public Subnet
+- Private Subnet 1 (HR)
+- Private Subnet 2 (Employee)
+- Internet Gateway
+- NAT Gateway
+- Route Tables
+- Security Groups
+- Company, HR, and Employee EC2 Instances
