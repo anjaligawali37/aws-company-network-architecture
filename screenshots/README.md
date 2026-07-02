@@ -246,7 +246,7 @@ This architecture closely resembles how real organizations securely deploy workl
 
 **Anjali Gawali**
 
-Computer Engineering Student
+Engineering Student
 
 AWS | Linux | Networking | Cloud Computing
 
