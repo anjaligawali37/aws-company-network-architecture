@@ -239,3 +239,17 @@ This project demonstrates a secure AWS networking architecture where:
 - Python HTTP Server is used to verify successful communication between instances.
 
 This architecture closely resembles how real organizations securely deploy workloads on AWS.
+
+---
+
+# 👩‍💻 Author
+
+**Anjali Gawali**
+
+Computer Engineering Student
+
+AWS | Linux | Networking | Cloud Computing
+
+- 💼 LinkedIn: https://www.linkedin.com/in/anjali-gawali-248b2a399/
+- 💻 GitHub: https://github.com/anjaligawali37
+---
