@@ -396,6 +396,10 @@ This project will be extended by implementing:
 
 Engineering Student | AWS Cloud Learner | Building real-world cloud networking projects to strengthen my cloud and DevOps skills.
 
+- 💼 LinkedIn: https://www.linkedin.com/in/anjali-gawali-248b2a399/
+- 💻 GitHub: https://github.com/anjaligawali37
+  
 ---
+
 
 ⭐ If you found this project helpful, feel free to fork the repository or leave a star!
