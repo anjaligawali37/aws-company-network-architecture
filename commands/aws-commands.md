@@ -13,6 +13,7 @@ Use SSH to connect from your local machine to the Company Server (Public EC2 Ins
 ssh -i aws_login.pem ubuntu@<Company-Public-IP>
 ```
 
+
 Example:
 
 ```bash
