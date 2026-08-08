@@ -4,7 +4,6 @@ This document contains the Linux commands used during the implementation and tes
 
 ---
 
-
 # 1️⃣ Connect to the Company Server
 
 Use SSH to connect from your local machine to the Company Server (Public EC2 Instance).
