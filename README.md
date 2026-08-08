@@ -5,7 +5,6 @@ A hands-on AWS networking project demonstrating a secure cloud infrastructure us
 This project was built to understand how organizations securely host public and internal servers using AWS networking services.
 
 ---
-
 # 📖 Project Overview
 
 In this project, I designed and deployed a secure AWS infrastructure from scratch.
