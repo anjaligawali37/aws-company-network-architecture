@@ -1,7 +1,6 @@
 # 🖥️ AWS Commands Used
 
 This document contains the Linux commands used during the implementation and testing of the **AWS Company Network Architecture** project.
-
 ---
 
 # 1️⃣ Connect to the Company Server
